@@ -1,262 +1,446 @@
-// Banking System
-document.getElementById('bankForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const amount = parseFloat(document.getElementById('amount').value);
-    const transactionType = document.getElementById('transactionType').value;
-    const balanceElement = document.getElementById('balance');
-    const currentBalance = parseFloat(balanceElement.textContent.replace(/[^0-9.-]+/g, ""));
-    
-    // Card type selection
-    let cardType = document.querySelector('.card-icon.active').id === 'visaIcon' ? 'visa' : 'mastercard';
-    
-    let newBalance;
-    let message;
-    
-    if (transactionType === 'deposit') {
-        newBalance = currentBalance + amount;
-        message = `Deposited $${amount.toFixed(2)} via ${cardType}. New balance: $${newBalance.toFixed(2)}`;
-    } else {
-        if (amount > currentBalance) {
-            alert("Insufficient funds!");
-            return;
-        }
-        newBalance = currentBalance - amount;
-        message = `Withdrew $${amount.toFixed(2)} via ${cardType}. New balance: $${newBalance.toFixed(2)}`;
-    }
-    
-    // Update balance display
-    balanceElement.textContent = `$${newBalance.toFixed(2)}`;
-    
-    // Show transaction message
-    alert(message);
-});
+// 🎰 FULL LAS VEGAS BACCARAT - COMPLETE PRODUCTION SCRIPT
+// Digital Bank Integration + $10,000 Welcome Bonus + Deposit System
 
-// Card type selection
-document.getElementById('visaIcon').addEventListener('click', function() {
-    document.getElementById('visaIcon').classList.add('active');
-    document.getElementById('mastercardIcon').classList.remove('active');
-    document.getElementById('cardType').value = 'visa';
-});
+const values = {
+  A: 1, 2: 2, 3: 3, 4: 4, 5: 5,
+  6: 6, 7: 7, 8: 8, 9: 9,
+  '10': 0, J: 0, Q: 0, K: 0
+};
 
-document.getElementById('mastercardIcon').addEventListener('click', function() {
-    document.getElementById('mastercardIcon').classList.add('active');
-    document.getElementById('visaIcon').classList.remove('active');
-    document.getElementById('cardType').value = 'mastercard';
-});
+const cardsArray = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 
-// Game Functions
-function play(game) {
-    const resultsDiv = document.getElementById('gameResults');
-    let result = "";
+// FIRST TIME $10,000 BONUS SYSTEM
+const FIRST_TIME_KEY = 'baccarat_first_time';
+const MAX_DEPOSIT_BONUS = 5000; // Additional deposit bonus
+
+function getWelcomeBonus() {
+  if (!localStorage.getItem(FIRST_TIME_KEY)) {
+    localStorage.setItem(FIRST_TIME_KEY, 'claimed');
+    return 10000;
+  }
+  return 0;
+}
+
+function hasDeposited() {
+  return localStorage.getItem('baccarat_deposit_made') === 'true';
+}
+
+// Game initialization with bonus
+let gameState = {
+  playerCards: [],
+  bankerCards: [],
+  balance: getWelcomeBonus(), // $10,000 first time!
+  originalBalance: getWelcomeBonus(),
+  winStreak: 0,
+  selectedChip: 25,
+  currentBet: { betOn: 'Banker', amount: 0 },
+  soundEnabled: true,
+  gameHistory: [],
+  isDealing: false,
+  bonusClaimed: getWelcomeBonus() > 0,
+  depositMade: hasDeposited()
+};
+
+// DOM Elements
+const elements = {
+  dealBtn: document.getElementById('dealBtn'),
+  resetBtn: document.getElementById('resetBtn'),
+  fastDealBtn: document.getElementById('fastDealBtn'),
+  playerCards: document.getElementById('playerCards'),
+  bankerCards: document.getElementById('bankerCards'),
+  playerTotal: document.getElementById('playerTotal'),
+  bankerTotal: document.getElementById('bankerTotal'),
+  result: document.getElementById('result'),
+  dealerVideo: document.getElementById('dealerVideo'),
+  balance: document.getElementById('balance'),
+  winStreak: document.getElementById('winStreak'),
+  currentBetText: document.getElementById('currentBetText'),
+  currentBetAmount: document.getElementById('currentBetAmount'),
+  chips: document.querySelectorAll('.chip'),
+  betButtons: document.querySelectorAll('.bet-btn'),
+  clearBet: document.getElementById('clearBet'),
+  soundToggle: document.getElementById('soundToggle'),
+  gameHistory: document.getElementById('gameHistory'),
+  bankToggle: document.getElementById('bankToggle'),
+  statusLight: document.getElementById('statusLight'),
+  dealerStatus: document.getElementById('dealerStatus')
+};
+
+// Core game functions
+function getRandomCard() {
+  return cardsArray[Math.floor(Math.random() * cardsArray.length)];
+}
+
+function calcTotal(cards) {
+  const sum = cards.reduce((acc, card) => acc + values[card], 0);
+  return sum % 10;
+}
+
+function createCardElement(cardValue, position, isBanker = false) {
+  const card = document.createElement('div');
+  card.className = `card ${isBanker ? 'banker-card' : ''} ${position}`;
+  card.textContent = cardValue;
+  card.dataset.value = cardValue;
+  return card;
+}
+
+async function flyCardFromDealer(cardElement, targetContainer, delay = 0, fast = false) {
+  return new Promise((resolve) => {
+    const flightTime = fast ? 0.4 : 0.8;
     
-    // Game logic implementations
-    if (game === 'blackjack') {
-        result = blackjack();
-    } else if (game === 'baccarat') {
-        result = baccarat();
-    } else if (game === 'roulette') {
-        result = roulette();
-    } else if (game === 'slots') {
-        result = slots();
-    } else if (game === 'hi-lo') {
-        result = hiLo();
-    } else if (game === 'craps') {
-        result = craps();
-    } else if (game === 'dragon-tiger') {
-        result = dragonTiger();
-    } else if (game === 'poker-draw') {
-        result = videoPoker();
-    } else if (game === 'keno') {
-        result = keno();
-    } else if (game === 'big-six') {
-        result = bigSix();
-    }
-    
-    resultsDiv.innerHTML = `
-        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-            <strong>${game.charAt(0).toUpperCase() + game.slice(1)}</strong>
-            <div style="margin-top: 10px;">${result}</div>
-        </div>
+    cardElement.style.cssText = `
+      position: fixed !important;
+      left: 75% !important;
+      top: 55% !important;
+      z-index: 10000 !important;
+      transform: translate(-50%, -50%) rotateY(180deg) scale(0.4) !important;
+      opacity: 0 !important;
+      transition: none !important;
     `;
+    
+    document.body.appendChild(cardElement);
+    
+    setTimeout(() => {
+      const targetX = targetContainer.dataset.positionX;
+      const targetY = targetContainer.dataset.positionY;
+      
+      cardElement.style.cssText = `
+        transition: all ${flightTime}s cubic-bezier(0.22, 0.61, 0.36, 1) !important;
+        left: ${targetX} !important;
+        top: ${targetY} !important;
+        transform: translate(-50%, -50%) rotateY(0deg) scale(1) !important;
+        opacity: 1 !important;
+      `;
+      
+      setTimeout(() => {
+        cardElement.classList.add('landed');
+        setTimeout(() => {
+          cardElement.style.cssText = '';
+          targetContainer.appendChild(cardElement);
+          resolve(cardElement);
+        }, 300);
+      }, flightTime * 1000);
+    }, delay);
+  });
 }
 
-// Game implementations
-function blackjack() {
-    const deck = ['2','3','J','A','K','Q','10','9','8','7','6','5','4'];
-    const suits = ['♠','♥','♦','♣'];
-    const player = [
-        [randomFromArray(deck), randomFromArray(suits)],
-        [randomFromArray(deck), randomFromArray(suits)]
-    ];
-    const dealer = [
-        [randomFromArray(deck), randomFromArray(suits)],
-        [randomFromArray(deck), randomFromArray(suits)]
-    ];
-    
-    const playerScore = calculateScore(player);
-    const dealerScore = calculateScore(dealer);
-    
-    let result = `Player: ${player[0].join('')}${player[1].join('')} = ${playerScore}<br>`;
-    result += `Dealer: ${dealer[0].join('')}${dealer[1].join('')} = ${dealerScore}<br>`;
-    
-    if (playerScore > dealerScore && playerScore <= 21) {
-        result += "Player wins!";
-    } else if (dealerScore > playerScore && dealerScore <= 21) {
-        result += "Dealer wins!";
-    } else {
-        result += "Push!";
-    }
-    
-    return result;
+function decideWinner(playerTotal, bankerTotal) {
+  if (playerTotal > bankerTotal) return 'Player';
+  if (bankerTotal > playerTotal) return 'Banker';
+  return 'Tie';
 }
 
-function baccarat() {
-    const player = dealBaccarat();
-    const banker = dealBaccarat();
-    const pScore = player % 10;
-    const bScore = banker % 10;
-    
-    let result = `Player: ${pScore}<br>Banker: ${bScore}<br>`;
-    
-    if (Math.abs(pScore - bScore) <= 1) {
-        result += "Banker wins!";
-    } else if (pScore > bScore) {
-        result += "Player wins!";
-    } else {
-        result += "Tie!";
-    }
-    
-    return result;
+function playDealerVoice(action) {
+  if (!gameState.soundEnabled || !('speechSynthesis' in window)) return;
+  
+  const voices = {
+    dealStart: "Cards flying! Player first card.",
+    playerCard: "Player.",
+    bankerCard: "Banker.",
+    reveal: "Banker reveals the cards!",
+    playerWin: "Player takes the hand!",
+    bankerWin: "Banker wins!",
+    tie: "It's a tie! Eight times payout!",
+    bonus: "Welcome bonus activated! Ten thousand dollars!"
+  };
+  
+  const utterance = new SpeechSynthesisUtterance(voices[action] || action);
+  utterance.rate = 1.4;
+  utterance.pitch = 1.3;
+  utterance.volume = 0.9;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
 }
 
-function roulette() {
-    const spin = Math.floor(Math.random() * 37);
-    const bet = Math.floor(Math.random() * 37);
-    const win = (spin === bet) ? 35 : 0;
-    
-    return `Spin: ${spin}<br>Your bet: ${bet}<br>Winnings: ${win}x`;
+// DEPOSIT SYSTEM INTEGRATION
+function checkDepositStatus() {
+  const depositAmount = parseInt(localStorage.getItem('baccarat_deposit_amount') || '0');
+  if (depositAmount > 0 && !gameState.depositMade) {
+    // Add deposit bonus (50% up to $5k)
+    const bonus = Math.min(depositAmount * 0.5, MAX_DEPOSIT_BONUS);
+    gameState.balance += depositAmount + bonus;
+    gameState.depositMade = true;
+    localStorage.setItem('baccarat_deposit_made', 'true');
+    showNotification(`💰 Deposit $${depositAmount} + $${bonus} bonus!`, 'info');
+    updateUI();
+  }
 }
 
-function slots() {
-    const symbols = '🍒🍋🍊🍉🍇'.split('');
-    const spin = [
-        randomFromArray(symbols),
-        randomFromArray(symbols),
-        randomFromArray(symbols)
-    ];
-    
-    let payout = 0;
-    if (spin[0] === spin[1] && spin[1] === spin[2]) {
-        payout = 10;
-    } else if (spin[0] === spin[1] || spin[1] === spin[2]) {
-        payout = 2;
-    }
-    
-    return `Result: ${spin.join('')}<br>Winnings: ${payout}x`;
+function simulateDeposit(amount) {
+  // Simulate Digital Bank deposit
+  localStorage.setItem('baccarat_deposit_amount', amount.toString());
+  checkDepositStatus();
 }
 
-function hiLo() {
-    const base = Math.floor(Math.random() * 13) + 1;
-    const answer = Math.floor(Math.random() * 13) + 1;
-    const result = (answer > base) ? "Win" : "Lose";
-    
-    return `Base: ${base}<br>Your number: ${answer}<br>Result: ${result}`;
+// UI Updates
+function updateUI() {
+  elements.balance.textContent = gameState.balance.toLocaleString();
+  elements.winStreak.textContent = gameState.winStreak;
+  elements.currentBetAmount.textContent = gameState.currentBet.amount.toLocaleString();
+  elements.currentBetText.textContent = gameState.currentBet.betOn || 'None';
+  
+  // Balance warning
+  if (gameState.balance < 100 && !gameState.depositMade) {
+    showNotification('⚠️ Low balance! Use Digital Bank to deposit ➡️', 'warning');
+  }
 }
 
-function craps() {
-    const roll = () => Math.floor(Math.random() * 6) + 1;
-    const firstRoll = roll() + roll();
-    let result;
-    
-    if ([7, 11].includes(firstRoll)) {
-        result = "Win!";
-    } else if ([2, 3, 12].includes(firstRoll)) {
-        result = "Lose";
-    } else {
-        result = `Point ${firstRoll}`;
-    }
-    
-    return `Roll: ${firstRoll}<br>Result: ${result}`;
+// WELCOME BONUS NOTIFICATION
+function showWelcomeBonus() {
+  if (gameState.bonusClaimed) {
+    showNotification('🎉 $10,000 WELCOME BONUS ACTIVATED!\nPlay now or deposit more!', 'info');
+    playDealerVoice('bonus');
+  }
 }
 
-function dragonTiger() {
-    const dragon = Math.random() > 0.5 ? "Dragon" : "Tiger";
-    const tiger = Math.random() > 0.5 ? "Tiger" : "Dragon";
-    let winner;
-    
-    if (dragon === tiger) {
-        winner = "Tie";
-    } else if (dragon === "Dragon") {
-        winner = "Dragon";
-    } else {
-        winner = "Tiger";
-    }
-    
-    return `Dragon: ${dragon}<br>Tiger: ${tiger}<br>Winner: ${winner}`;
+// MAIN DEAL FUNCTION
+async function dealGame(fastMode = false) {
+  if (gameState.currentBet.amount === 0) {
+    showNotification('Place your bet first!', 'warning');
+    return;
+  }
+  if (gameState.isDealing) return;
+  
+  gameState.isDealing = true;
+  
+  // Lock controls
+  elements.dealBtn.disabled = true;
+  elements.resetBtn.disabled = true;
+  elements.fastDealBtn.disabled = true;
+  
+  elements.dealerVideo.classList.add('dealing');
+  elements.statusLight.classList.add('active');
+  elements.dealerStatus.textContent = 'DEALING LIVE';
+  
+  playDealerVoice('dealStart');
+  elements.result.innerHTML = '🃏 CARDS IN THE AIR!';
+  elements.result.classList.add('dealing');
+  
+  // Generate cards
+  gameState.playerCards = [getRandomCard(), getRandomCard()];
+  gameState.bankerCards = [getRandomCard(), getRandomCard()];
+  
+  const dealDelay = fastMode ? 250 : 900;
+  
+  // REAL CASINO SEQUENCE: P1 → B1(down) → P2 → B2(down)
+  await flyCardFromDealer(createCardElement(gameState.playerCards[0], 'player1'), 
+                         elements.playerCards, 0, fastMode);
+  playDealerVoice('playerCard');
+  
+  const bankerCard1 = createCardElement(gameState.bankerCards[0], 'banker1', true);
+  bankerCard1.classList.add('face-down');
+  await flyCardFromDealer(bankerCard1, elements.bankerCards, dealDelay/2, fastMode);
+  playDealerVoice('bankerCard');
+  
+  await flyCardFromDealer(createCardElement(gameState.playerCards[1], 'player2'), 
+                         elements.playerCards, dealDelay, fastMode);
+  playDealerVoice('playerCard');
+  
+  const bankerCard2 = createCardElement(gameState.bankerCards[1], 'banker2', true);
+  bankerCard2.classList.add('face-down');
+  await flyCardFromDealer(bankerCard2, elements.bankerCards, dealDelay * 1.5, fastMode);
+  playDealerVoice('bankerCard');
+  
+  // BANKER REVEAL
+  await new Promise(resolve => setTimeout(resolve, fastMode ? 600 : 1600));
+  playDealerVoice('reveal');
+  
+  [bankerCard1, bankerCard2].forEach((card, i) => {
+    setTimeout(() => {
+      card.classList.remove('face-down');
+      card.classList.add('flip-reveal');
+    }, i * 400);
+  });
+  
+  // TOTALS
+  await new Promise(resolve => setTimeout(resolve, fastMode ? 800 : 2200));
+  
+  const playerTotal = calcTotal(gameState.playerCards);
+  const bankerTotal = calcTotal(gameState.bankerCards);
+  
+  elements.playerTotal.textContent = playerTotal;
+  elements.bankerTotal.textContent = bankerTotal;
+  
+  // WINNER
+  await new Promise(resolve => setTimeout(resolve, fastMode ? 1000 : 2800));
+  
+  const winner = decideWinner(playerTotal, bankerTotal);
+  let payout = 0;
+  
+  elements.result.classList.remove('dealing');
+  
+  if (winner === 'Tie') {
+    payout = gameState.currentBet.amount * 8;
+    gameState.balance += payout;
+    gameState.winStreak = 0;
+    elements.result.innerHTML = `🎀 TIE WIN! +$${payout.toLocaleString()}<br><small>8x PAYOUT</small>`;
+  } else if (winner === gameState.currentBet.betOn) {
+    payout = winner === 'Banker' ? 
+      Math.floor(gameState.currentBet.amount * 1.95) : 
+      gameState.currentBet.amount * 2;
+    gameState.balance += payout;
+    gameState.winStreak++;
+    elements.result.innerHTML = `${winner}<br>WINS BIG!<br>+$${payout.toLocaleString()}`;
+  } else {
+    gameState.winStreak = 0;
+    elements.result.innerHTML = `${winner.toUpperCase()}<br>BEATS YOU<br>-$${gameState.currentBet.amount.toLocaleString()}`;
+  }
+  
+  elements.result.className = `result-text ${winner.toLowerCase()}${winner === gameState.currentBet.betOn ? '-win' : ''}`;
+  
+  updateUI();
+  addToHistory(winner, payout);
+  
+  // Reset bet
+  gameState.currentBet = { betOn: null, amount: 0 };
+  
+  setTimeout(() => {
+    gameState.isDealing = false;
+    elements.dealBtn.disabled = true;
+    elements.resetBtn.disabled = false;
+    elements.fastDealBtn.disabled = false;
+    elements.dealerVideo.classList.remove('dealing');
+    elements.statusLight.classList.remove('active');
+    elements.dealerStatus.textContent = 'READY';
+  }, fastMode ? 1800 : 4000);
 }
 
-function videoPoker() {
-    const ranks = '23456789TJQKA'.split('');
-    const hand = [];
+// Betting
+function initBetting() {
+  elements.chips.forEach((chip, index) => {
+    chip.addEventListener('click', () => {
+      gameState.selectedChip = Number(chip.dataset.value);
+      elements.chips.forEach(c => c.classList.remove('selected'));
+      chip.classList.add('selected');
+    });
     
-    for (let i = 0; i < 5; i++) {
-        hand.push(randomFromArray(ranks));
-    }
-    
-    const sortedHand = [...hand].sort();
-    const hasPair = new Set(sortedHand).size < 5;
-    const result = hasPair ? "Pair" : "High Card";
-    
-    return `Hand: ${sortedHand.join(' ')}<br>Result: ${result}`;
+    // Auto-select first chip
+    if (index === 2) chip.click(); // $25 default
+  });
+  
+  elements.betButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!gameState.selectedChip) {
+        showNotification('Select chip first!', 'warning');
+        return;
+      }
+      if (gameState.currentBet.amount + gameState.selectedChip > gameState.balance) {
+        showNotification(`Need $${gameState.selectedChip}! Open Digital Bank ➡️`, 'error');
+        return;
+      }
+      
+      gameState.currentBet.betOn = btn.dataset.bet;
+      gameState.currentBet.amount += gameState.selectedChip;
+      gameState.balance -= gameState.selectedChip;
+      
+      elements.betButtons.forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      
+      updateUI();
+      elements.dealBtn.disabled = false;
+    });
+  });
+  
+  elements.clearBet.addEventListener('click', () => {
+    gameState.balance += gameState.currentBet.amount;
+    gameState.currentBet = { betOn: null, amount: 0 };
+    updateUI();
+    elements.dealBtn.disabled = true;
+    elements.betButtons.forEach(b => b.classList.remove('selected'));
+  });
 }
 
-function keno() {
-    const draw = new Set();
-    while (draw.size < 20) {
-        draw.add(Math.floor(Math.random() * 80) + 1);
-    }
-    
-    const spots = [
-        Math.floor(Math.random() * 80) + 1,
-        Math.floor(Math.random() * 80) + 1,
-        Math.floor(Math.random() * 80) + 1
-    ];
-    
-    const hits = spots.filter(spot => draw.has(spot)).length;
-    const payout = hits === 3 ? 10 : hits === 2 ? 5 : 0;
-    
-    return `Hits: ${hits}<br>Winnings: ${payout}x`;
+// Controls
+function initControls() {
+  elements.dealBtn.addEventListener('click', () => dealGame(false));
+  elements.fastDealBtn.addEventListener('click', () => dealGame(true));
+  elements.resetBtn.addEventListener('click', resetGame);
+  
+  elements.soundToggle.addEventListener('click', () => {
+    gameState.soundEnabled = !gameState.soundEnabled;
+    elements.soundToggle.classList.toggle('muted', !gameState.soundEnabled);
+  });
+  
+  elements.bankToggle.addEventListener('click', () => {
+    const bankFrame = document.querySelector('.bank-iframe');
+    const isOpen = bankFrame.style.transform === 'translateX(0)';
+    bankFrame.style.transform = isOpen ? 'translateX(100%)' : 'translateX(0)';
+    elements.bankToggle.textContent = isOpen ? '💳 BANK' : '✕';
+  });
 }
 
-function bigSix() {
-    const symbols = ['💰','🍒','💎','🐎','🚗','🏆'];
-    const spin = randomFromArray(symbols);
-    const payout = (spin === '💰') ? 40 : 10;
-    
-    return `Result: ${spin}<br>Winnings: ${payout}x`;
+// Notifications & History
+function showNotification(message, type = 'info') {
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  notification.textContent = message;
+  document.body.appendChild(notification);
+  
+  setTimeout(() => notification.classList.add('show'), 100);
+  setTimeout(() => {
+    notification.classList.remove('show');
+    setTimeout(() => notification.remove(), 400);
+  }, 3000);
 }
 
-// Helper functions
-function randomFromArray(arr) {
-    return arr[Math.floor(Math.random() * arr.length)];
+function addToHistory(winner, payout) {
+  const entry = {
+    winner,
+    payout: payout || 0,
+    timestamp: new Date().toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    })
+  };
+  gameState.gameHistory.unshift(entry);
+  if (gameState.gameHistory.length > 12) gameState.gameHistory.pop();
+  
+  elements.gameHistory.innerHTML = gameState.gameHistory.map(entry => `
+    <div class="history-item ${entry.payout > 0 ? 'win' : 'loss'}">
+      <strong>${entry.winner}</strong>
+      ${entry.payout ? `<br>+$${entry.payout.toLocaleString()}` : '<br>- Bet'}
+      <small>${entry.timestamp}</small>
+    </div>
+  `).join('');
 }
 
-function calculateScore(cards) {
-    const values = {
-        '2': 2, '3': 3, 'J': 10, 'A': 11, 'K': 10, 'Q': 10, '10': 10, '9': 9, '8': 8, '7': 7, '6': 6, '5': 5, '4': 4
-    };
-    
-    let score = cards.reduce((sum, card) => sum + values[card[0]], 0);
-    let aces = cards.filter(card => card[0] === 'A').length;
-    
-    while (score > 21 && aces > 0) {
-        score -= 10;
-        aces--;
-    }
-    
-    return score;
+function resetGame() {
+  gameState.playerCards = [];
+  gameState.bankerCards = [];
+  elements.playerCards.innerHTML = '';
+  elements.bankerCards.innerHTML = '';
+  elements.playerTotal.textContent = '0';
+  elements.bankerTotal.textContent = '0';
+  elements.result.textContent = 'Ready for next hand!';
+  elements.result.className = 'result-text';
+  
+  elements.dealBtn.disabled = true;
+  elements.resetBtn.disabled = true;
+  elements.fastDealBtn.disabled = true;
+  
+  gameState.currentBet = { betOn: null, amount: 0 };
+  updateUI();
+  elements.betButtons.forEach(b => b.classList.remove('selected'));
 }
 
-function dealBaccarat() {
-    return (Math.floor(Math.random() * 10) + 1) + (Math.floor(Math.random() * 10) + 1);
-}
+// INITIALIZATION
+document.addEventListener('DOMContentLoaded', () => {
+  initBetting();
+  initControls();
+  updateUI();
+  checkDepositStatus();
+  
+  // Dealer video
+  elements.dealerVideo.play().catch(() => {});
+  
+  // Welcome sequence
+  setTimeout(() => {
+    showWelcomeBonus();
+    showNotification('💳 Digital Bank ready for deposits anytime!', 'info');
+  }, 800);
+  
+  console.log(`🎰 BACCARAT LOADED | Balance: $${gameState.balance.toLocaleString()} | Bonus: ${gameState.bonusClaimed ? 'CLAIMED' : 'AVAILABLE'}`);
+  
+  // Deposit simulation (for testing)
+  window.simulateDeposit = simulateDeposit;
+});
