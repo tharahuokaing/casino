@@ -1,3 +1,4 @@
+## ⚠️ Educational Use Only
 # Casino Project Overview
 
 **Casino** is a web-based application built with HTML, CSS, and JavaScript. It is designed as an educational project to simulate simple casino-style interactions for learning and practice purposes. This project is not intended for real gambling or commercial use — it is strictly for **education and experience only**.
