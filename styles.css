@@ -956,3 +956,59 @@ body {
   opacity: 0.03;
   pointer-events: none;
 }
+
+/* Container for the AI Dealer */
+.ai-dealer-container {
+  position: relative;
+  border: 2px solid #ffd700;
+  border-radius: 12px;
+  background: #000;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+/* The Dealer Image */
+.ai-dealer-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  /* Gives the 'Deepfake' digital look */
+  filter: contrast(1.1) brightness(1.1) saturate(1.1);
+  /* Breathing animation to simulate life */
+  animation: ai-breathe 8s ease-in-out infinite;
+}
+
+/* Digital Scanline moving down the face */
+.ai-scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 10px;
+  background: rgba(0, 255, 255, 0.1);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+  animation: scan-move 4s linear infinite;
+  pointer-events: none;
+}
+
+/* Animations */
+@keyframes ai-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+@keyframes scan-move {
+  0% { top: -10%; }
+  100% { top: 110%; }
+}
+
+/* HUD Frame Effect */
+.ai-hud-frame {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  right: 10%;
+  bottom: 10%;
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  pointer-events: none;
+}
