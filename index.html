@@ -4,23 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Huokaing Thara 🏦 VIP Baccarat - $10,000 Welcome Bonus</title>
-  <meta name="description" content="Huokaing Thara Casino - Live Dealer Baccarat with Ton Chan Seyma. $10,000 Free Bonus + Digital Bank Integration.">
+  <meta name="description" content="Huokaing Thara Casino - VIP AI Deepfake Live Dealer. $10,000 Free Bonus + Digital Bank Integration.">
   <link rel="stylesheet" href="styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%23ffd700'>HT</text></svg>">
 </head>
 <body>
-  <!-- DIGITAL BANK INTEGRATION -->
+
   <div class="bank-integration">
-    <iframe src="https://tharahuokaing.github.io/bank/" 
-            title="Huokaing Thara Digital Bank" 
-            frameborder="0" 
+    <iframe src="https://tharahuokaing.github.io/bank/"
+            title="Huokaing Thara Digital Bank"
+            frameborder="0"
             class="bank-iframe"
             loading="lazy"></iframe>
     <button id="bankToggle" class="bank-toggle">💳 BANK</button>
   </div>
 
-  <!-- Casino ambiance particles -->
   <div class="casino-particles">
     <div class="particle gold"></div>
     <div class="particle cyan"></div>
@@ -30,122 +29,98 @@
     <div class="particle gold"></div>
   </div>
 
-  <!-- HUOKAING THARA CASINO HEADER -->
   <header class="game-header">
     <div class="casino-logo">
       <h1 class="title">HUOKAING THARA</h1>
       <div class="logo-glow">🏦</div>
     </div>
-    <p class="subtitle">VIP BACCARAT LIVE • Dealer</p>
+    <p class="subtitle">VIP LIVE DEEPFAKE DEALER</p>
     <div class="bonus-banner">
       <span class="bonus-text">$10,000 WELCOME BONUS</span>
       <span class="bonus-glow"></span>
     </div>
   </header>
 
-  <!-- Main Game Table -->
+    <div id="dealer" class="ai-dealer-container">
+    <div class="ai-avatar-wrapper">
+      <img id="aiDealerImg" 
+           src="image/dealer.png" 
+           alt="Huokaing Thara VIP Dealer" 
+           class="ai-dealer-img">
+    
+      <div class="ai-glitch-overlay"></div>
+      <div class="ai-hud-frame"></div>
+      <div class="ai-scanline"></div> 
+    </div>
+
+    <div class="dealer-status">
+      <div class="pulse-wrapper">
+        <span class="status-light active" id="statusLight"></span>
+        <span class="pulse-ring"></span>
+      </div>
+      <span id="dealerStatus">DEEPFAKE AI LIVE</span>
+    </div>
+  </div>
+    
   <main id="game">
-    <!-- PLAYER HAND (Left side) -->
     <div class="hand player" id="playerHand">
       <h2 class="hand-title">👤 PLAYER</h2>
       <div class="cards-container" id="playerCards" data-position-x="25%" data-position-y="50%"></div>
       <p class="total-display">Total: <span class="total" id="playerTotal">0</span></p>
     </div>
 
-    <!-- BANKER HAND (Right side - Premium) -->
     <div class="hand banker" id="bankerHand">
       <h2 class="hand-title">🏦 BANKER</h2>
       <div class="cards-container" id="bankerCards" data-position-x="75%" data-position-y="50%"></div>
       <p class="total-display">Total: <span class="total" id="bankerTotal">0</span></p>
     </div>
   </main>
-  
-  <!-- LIVE DEALER (Banker Side) -->
-  <div id="dealer">
-    <video id="dealerVideo" autoplay muted loop playsinline preload="metadata">
-      <source src="ton-chan-seyma-baccarat.mp4" type="video/mp4">
-      <source src="ton-chan-seyma-baccarat.webm" type="video/webm">
-      <img src="https://via.placeholder.com/360x360/1a1a2f/ffffff?text=LIVE+DEALER" alt="Huokaing Thara Live Dealer">
-    </video>
-    <div class="dealer-status">
-      <span class="status-light" id="statusLight"></span>
-      <span id="dealerStatus">HUOKAING THARA LIVE</span>
-    </div>
-  </div>
 
-  <!-- Betting Interface -->
   <section id="betting">
     <div class="stats-row">
-      <div class="stat-item">
-        💰 <span>Balance: $<span id="balance">10000</span></span>
-      </div>
-      <div class="stat-item">
-        🔥 <span>Streak: <span id="winStreak">0</span></span>
-      </div>
-      <div class="stat-item">
-        🎯 <span>Bet: $<span id="currentBetAmount">0</span></span>
-      </div>
-    </div>
-    
-    <!-- Chip Selection -->
-    <div id="chipsContainer" class="chips-grid">
-      <button class="chip" data-value="10">$10</button>
-      <button class="chip" data-value="25">$25</button>
-      <button class="chip" data-value="50">$50</button>
-      <button class="chip" data-value="100">$100</button>
-      <button class="chip" data-value="500">$500</button>
-      <button class="chip big-chip" data-value="1000">$1K</button>
+      <div class="stat-item">💰 Balance: $<span id="balance">10000</span></div>
+      <div class="stat-item">🔥 Streak: <span id="winStreak">0</span></div>
+      <div class="stat-item">🎯 Bet: $<span id="currentBetAmount">0</span></div>
     </div>
 
-    <!-- Bet Options -->
+    <div id="chipsContainer" class="chips-grid">
+      <button class="chip" data-value="10000">$10K</button>
+      <button class="chip" data-value="25000">$25K</button>
+      <button class="chip" data-value="50000">$50K</button>
+      <button class="chip" data-value="100000">$100K</button>
+      <button class="chip" data-value="500000">$500K</button>
+      <button class="chip big-chip" data-value="1000000">$1M</button>
+    </div>
+
     <div class="bet-section">
-      <label>Place Bet on Huokaing Thara Table:</label>
+      <label>Select Bet Type:</label>
       <div id="betOptions" class="bet-buttons">
-        <button class="bet-btn" data-bet="Player">
-          <span class="bet-emoji">👤</span>
-          Player<br><small>1.95x</small>
-        </button>
-        <button class="bet-btn banker-bet selected" data-bet="Banker">
-          <span class="bet-emoji">🏦</span>
-          Banker<br><small>1.90x</small>
-        </button>
-        <button class="bet-btn" data-bet="Tie">
-          <span class="bet-emoji">🤝</span>
-          Tie<br><small>8.00x</small>
-        </button>
+        <button class="bet-btn" data-bet="Player">👤 Player<br><small>1.95x</small></button>
+        <button class="bet-btn banker-bet selected" data-bet="Banker">🏦 Banker<br><small>1.90x</small></button>
+        <button class="bet-btn" data-bet="Tie">🤝 Tie<br><small>8.00x</small></button>
       </div>
     </div>
 
     <div class="bet-controls">
-      <span class="bet-info">
-        Current: <strong id="currentBetText">Banker</strong>
-      </span>
+      <span class="bet-info">Selected: <strong id="currentBetText">Banker</strong></span>
       <button id="clearBet" class="clear-btn">🗑️ Clear Bet</button>
-    </div>
-    
-    <!-- Deposit Reminder -->
-    <div class="deposit-notice" id="depositNotice" style="display: none;">
-      <p>💳 Low balance? <strong>Open Digital Bank</strong> for instant deposits!</p>
     </div>
   </section>
 
-  <!-- Game Controls -->
   <div id="controls" class="control-panel">
     <button id="dealBtn" class="main-btn" disabled>🎲 DEAL CARDS</button>
     <button id="fastDealBtn" class="secondary-btn" disabled>⚡ FAST DEAL</button>
     <button id="resetBtn" class="secondary-btn" disabled>🔄 NEW HAND</button>
   </div>
 
-  <!-- Results & History -->
   <section id="results-section">
-    <h2 id="result" class="result-text">Welcome to Huokaing Thara Casino!<br>$10,000 FREE BONUS ACTIVATED 🎉</h2>
+    <h2 id="result" class="result-text">Ready for VIP Stakes</h2>
     <div class="history-section">
-      <h4>🕒 Huokaing Thara Recent Hands</h4>
+      <h4>🕒 Huokaing Thara History</h4>
       <div id="gameHistory" class="history-panel"></div>
     </div>
   </section>
 
-  <!-- UI Controls -->
   <footer class="ui-overlay">
     <button id="soundToggle" class="sound-btn">🔊</button>
   </footer>

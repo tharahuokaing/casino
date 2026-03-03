@@ -883,3 +883,76 @@ body {
   .card { width: 50px; height: 75px; font-size: 22px; }
   #betting { padding: 25px 20px; margin: 20px 10px; }
 }
+
+.ai-dealer-container {
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #ffd700;
+  border-radius: 15px;
+  background: #000;
+}
+
+.ai-dealer-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: contrast(1.1) brightness(1.1);
+  /* Subtle "breathing" animation */
+  animation: ai-breathe 5s ease-in-out infinite;
+}
+
+.ai-scanline {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 20px;
+  background: rgba(255, 215, 0, 0.1);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+  animation: scan 4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes ai-breathe {
+  0%, 100% { transform: scale(1.0); }
+  50% { transform: scale(1.03); }
+}
+
+@keyframes scan {
+  0% { top: -20px; }
+  100% { top: 100%; }
+}
+
+.pulse-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.pulse-ring {
+  position: absolute;
+  width: 12px; height: 12px;
+  background: #00ff00;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: pulse-ring 2s infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+.ai-dealer-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.05) saturate(1.1) sepia(5%);
+  box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+}
+
+/* Add a faint digital noise to mimic AI generation */
+.ai-glitch-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
+  opacity: 0.03;
+  pointer-events: none;
+}
