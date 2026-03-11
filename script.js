@@ -15,7 +15,7 @@ const MAX_DEPOSIT_BONUS = 50000; // Increased for VIP
 function getWelcomeBonus() {
   if (!localStorage.getItem(FIRST_TIME_KEY)) {
     localStorage.setItem(FIRST_TIME_KEY, 'claimed');
-    return 100000; // Giving $100k to start since min bet is $10k
+    return 10000; // Giving $100k to start since min bet is $10k
   }
   return 10000; 
 }
