@@ -12,13 +12,20 @@
 <body>
 
   <div class="bank-integration">
-    <iframe src="https://tharahuokaing.github.io/bank/"
-            title="Huokaing Thara Digital Bank"
-            frameborder="0"
-            class="bank-iframe"
-            loading="lazy"></iframe>
-    <button id="bankToggle" class="bank-toggle">💳 BANK</button>
-  </div>
+  <iframe src="https://tharahuokaing.github.io/bank/"
+          title="Huokaing Thara Digital Bank"
+          frameborder="0"
+          class="bank-iframe"
+          loading="lazy"></iframe>
+
+  <button id="bankToggle" class="bank-toggle">🏦 BANK</button>
+</div>
+
+<script>
+  document.getElementById("bankToggle").addEventListener("click", function() {
+      window.location.href = "https://tharahuokaing.github.io/bank/";
+  });
+</script>
 
   <div class="casino-particles">
     <div class="particle gold"></div>
