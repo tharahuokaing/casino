@@ -1,148 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HUOKAING THARA | Imperial Plaza</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body class="imperial-theme">
-    <div class="hologram-grid"></div>
-    <div class="scanline"></div>
-
-    <main id="app-container">
-        <canvas id="imperial-main-canvas"></canvas>
-
-        <header class="hud-top">
-            <div class="user-profile">
-                <div class="avatar-glow"></div>
-                <span id="player-name">CITIZEN_00</span>
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Huokaing Thara ðŸ¦ VIP Baccarat - $100,000 Welcome Bonus</title>
+      <meta name="description" content="Huokaing Thara Casino - VIP AI Deepfake Live Dealer. $100,000 Free Bonus + Digital Bank Integration.">
+      <link rel="stylesheet" href="styles.css" />
+      <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+      <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%23ffd700'>HT</text></svg>">
+   </head>
+   <body>
+      <div class="bank-integration">
+         <iframe src="https://tharahuokaing.github.io/bank/"
+            title="Huokaing Thara Digital Bank"
+            frameborder="0"
+            class="bank-iframe"
+            loading="lazy"></iframe>
+         <button id="bankToggle" class="bank-toggle">ðŸ’³ BANK</button>
+      </div>
+      <div class="casino-particles">
+         <div class="particle gold"></div>
+         <div class="particle cyan"></div>
+         <div class="particle magenta"></div>
+         <div class="particle gold"></div>
+         <div class="particle cyan"></div>
+         <div class="particle gold"></div>
+      </div>
+      <header class="game-header">
+         <div class="casino-logo">
+            <h1 class="title">HUOKAING THARA</h1>
+            <div class="logo-glow">ðŸ¦</div>
+         </div>
+         <p class="subtitle">VIP LIVE DEEPFAKE DEALER</p>
+         <div class="bonus-banner">
+            <span class="bonus-text">$100,000 WELCOME BONUS</span>
+            <span class="bonus-glow"></span>
+         </div>
+      </header>
+      <div id="dealer" class="ai-dealer-container">
+         <div class="ai-avatar-wrapper">
+            <img id="aiDealerImg"
+               src="image/dealer.png"
+               alt="Huokaing Thara VIP Dealer"
+               class="ai-dealer-img">
+            <div class="ai-glitch-overlay"></div>
+            <div class="ai-hud-frame"></div>
+            <div class="ai-scanline"></div>
+         </div>
+         <div class="dealer-status">
+            <div class="pulse-wrapper">
+               <span class="status-light active" id="statusLight"></span>
+               <span class="pulse-ring"></span>
             </div>
-            <div class="balance-display">
-                <small>IMPERIAL CREDITS</small>
-                <div id="credit-count">230,000.00</div>
+            <span id="dealerStatus">DEEPFAKE AI LIVE</span>
+         </div>
+      </div>
+      <main id="game">
+         <div class="hand player" id="playerHand">
+            <h2 class="hand-title">ðŸ‘¤ PLAYER</h2>
+            <div class="cards-container" id="playerCards" data-position-x="25%" data-position-y="50%"></div>
+            <p class="total-display">Total: <span class="total" id="playerTotal">0</span></p>
+         </div>
+         <div class="hand banker" id="bankerHand">
+            <h2 class="hand-title">ðŸ¦ BANKER</h2>
+            <div class="cards-container" id="bankerCards" data-position-x="75%" data-position-y="50%"></div>
+            <p class="total-display">Total: <span class="total" id="bankerTotal">0</span></p>
+         </div>
+      </main>
+      <section id="betting">
+         <div class="stats-row">
+            <div class="stat-item">ðŸ’° Balance: $<span id="balance">100000</span></div>
+            <div class="stat-item">ðŸ”¥ Streak: <span id="winStreak">0</span></div>
+            <div class="stat-item">ðŸŽ¯ Bet: $<span id="currentBetAmount">0</span></div>
+         </div>
+         <div id="chipsContainer" class="chips-grid">
+            <button class="chip" data-value="10000">$10K</button>
+            <button class="chip" data-value="25000">$25K</button>
+            <button class="chip" data-value="50000">$50K</button>
+            <button class="chip" data-value="100000">$100K</button>
+            <button class="chip" data-value="500000">$500K</button>
+            <button class="chip big-chip" data-value="1000000">$1M</button>
+         </div>
+         <div class="bet-section">
+            <label>Select Bet Type:</label>
+            <div id="betOptions" class="bet-buttons">
+               <button class="bet-btn" data-bet="Player">ðŸ‘¤ Player<br><small>1.95x</small></button>
+               <button class="bet-btn banker-bet selected" data-bet="Banker">ðŸ¦ Banker<br><small>1.90x</small></button>
+               <button class="bet-btn" data-bet="Tie">ðŸ¤ Tie<br><small>8.00x</small></button>
             </div>
-        </header>
-
-        <section class="viewport-ui">
-            <div class="win-announcement" id="message-pod">
-                <h2 class="glow-text">AWAITING COMMAND</h2>
-            </div>
-        </section>
-
-        <footer class="hud-bottom">
-            <div class="control-group">
-                <button class="btn-holo" id="btn-vault">VAULT</button>
-                <button class="btn-spin-main" id="btn-spin">
-                    <span class="spin-inner">SPIN</span>
-                </button>
-                <button class="btn-holo" id="btn-menu">SYSTEM</button>
-            </div>
-        </footer>
-    </main>
-
-    <script src="js/core00.js"></script>
-    <script src="js/core01.js"></script>
-    <script src="js/core02.js"></script>
-    <script src="js/core03.js"></script>
-    <script src="js/core04.js"></script>
-    <script src="js/core05.js"></script>
-    <script src="js/core06.js"></script>
-    <script src="js/core07.js"></script>
-    <script src="js/core08.js"></script>
-    <script src="js/core09.js"></script>
-    <script src="js/core10.js"></script>
-    <script src="js/core11.js"></script>
-    <script src="js/core12.js"></script>
-    <script src="js/core13.js"></script>
-    <script src="js/core14.js"></script>
-    <script src="js/core15.js"></script>
-    <script src="js/core16.js"></script>
-    <script src="js/core17.js"></script>
-    <script src="js/core18.js"></script>
-    <script src="js/core19.js"></script>
-    <script src="js/core20.js"></script>
-    <script src="js/core21.js"></script>
-    <script src="js/core22.js"></script>
-    <script src="js/core23.js"></script>
-    <script src="js/core24.js"></script>
-    <script src="js/core25.js"></script>
-    <script src="js/core26.js"></script>
-    <script src="js/core27.js"></script>
-    <script src="js/core28.js"></script>
-    <script src="js/core29.js"></script>
-    <script src="js/core30.js"></script>
-    <script src="js/core31.js"></script>
-    <script src="js/core32.js"></script>
-    <script src="js/core33.js"></script>
-    <script src="js/core34.js"></script>
-    <script src="js/core35.js"></script>
-    <script src="js/core36.js"></script>
-    <script src="js/core37.js"></script>
-    <script src="js/core38.js"></script>
-    <script src="js/core39.js"></script>
-    <script src="js/core40.js"></script>
-    <script src="js/core41.js"></script>
-    <script src="js/core42.js"></script>
-    <script src="js/core43.js"></script>
-    <script src="js/core44.js"></script>
-    <script src="js/core45.js"></script>
-    <script src="js/core46.js"></script>
-    <script src="js/core47.js"></script>
-    <script src="js/core48.js"></script>
-    <script src="js/core49.js"></script>
-    <script src="js/core50.js"></script>
-    <script src="js/core51.js"></script>
-    <script src="js/core52.js"></script>
-    <script src="js/core53.js"></script>
-    <script src="js/core54.js"></script>
-    <script src="js/core55.js"></script>
-    <script src="js/core56.js"></script>
-    <script src="js/core57.js"></script>
-    <script src="js/core58.js"></script>
-    <script src="js/core59.js"></script>
-    <script src="js/core60.js"></script>
-    <script src="js/core61.js"></script>
-    <script src="js/core62.js"></script>
-    <script src="js/core63.js"></script>
-    <script src="js/core64.js"></script>
-    <script src="js/core65.js"></script>
-    <script src="js/core66.js"></script>
-    <script src="js/core67.js"></script>
-    <script src="js/core68.js"></script>
-    <script src="js/core69.js"></script>
-    <script src="js/core70.js"></script>
-    <script src="js/core71.js"></script>
-    <script src="js/core72.js"></script>
-    <script src="js/core73.js"></script>
-    <script src="js/core74.js"></script>
-    <script src="js/core75.js"></script>
-    <script src="js/core76.js"></script>
-    <script src="js/core77.js"></script>
-    <script src="js/core78.js"></script>
-    <script src="js/core79.js"></script>
-    <script src="js/core80.js"></script>
-    <script src="js/core81.js"></script>
-    <script src="js/core82.js"></script>
-    <script src="js/core83.js"></script>
-    <script src="js/core84.js"></script>
-    <script src="js/core85.js"></script>
-    <script src="js/core86.js"></script>
-    <script src="js/core87.js"></script>
-    <script src="js/core88.js"></script>
-    <script src="js/core89.js"></script>
-    <script src="js/core90.js"></script>
-    <script src="js/core91.js"></script>
-    <script src="js/core92.js"></script>
-    <script src="js/core93.js"></script>
-    <script src="js/core94.js"></script>
-    <script src="js/core95.js"></script>
-    <script src="js/core96.js"></script>
-    <script src="js/core97.js"></script>
-    <script src="js/core98.js"></script>
-    <script src="js/core99.js"></script>
-    <script src="js/core100.js"></script>
-    <script src="bridge.js"></script>
-    <script src="ultra_secure_mode.js"></script>
-</body>
+         </div>
+         <div class="bet-controls">
+            <span class="bet-info">Selected: <strong id="currentBetText">Banker</strong></span>
+            <button id="clearBet" class="clear-btn">ðŸ—‘ï¸ Clear Bet</button>
+         </div>
+      </section>
+      <div id="controls" class="control-panel">
+         <button id="dealBtn" class="main-btn" disabled>ðŸŽ² DEAL CARDS</button>
+         <button id="fastDealBtn" class="secondary-btn" disabled>âš¡ FAST DEAL</button>
+         <button id="resetBtn" class="secondary-btn" disabled>ðŸ”„ NEW HAND</button>
+      </div>
+      <section id="results-section">
+         <h2 id="result" class="result-text">Ready for VIP Stakes</h2>
+         <div class="history-section">
+            <h4>ðŸ•’ Huokaing Thara History</h4>
+            <div id="gameHistory" class="history-panel"></div>
+         </div>
+      </section>
+      <footer class="ui-overlay">
+         <button id="soundToggle" class="sound-btn">ðŸ”Š</button>
+      </footer>
+      <script src="script.js"></script>
+      <script src="ultra_secure_mode.js"></script>
+   </body>
 </html>
