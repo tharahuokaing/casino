@@ -77,5 +77,3 @@ Contributions are welcome!
 ## License
 This project is licensed under the **MIT License**. See the `[Looks like the result wasn't safe to show. Let's switch things up and try something else!]` file for details.  
 ---
-
-Would you like me to also **add a “Future Improvements” section** (e.g., possible games, animations, or UI enhancements) so the README doubles as a roadmap for learning projects?
